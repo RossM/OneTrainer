@@ -108,12 +108,21 @@ class StableDiffusionFineTuneVaeDataLoader(BaseDataLoader):
             crop_resolution_out_name='crop_resolution',
             possible_resolutions_out_name='possible_resolutions'
         )
+        
+        single_aspect_calculation = SingleAspectCalculation(
+            target_resolution=args.resolution,
+            resolution_in_name='original_resolution',
+            scale_resolution_out_name='scale_resolution',
+            crop_resolution_out_name='crop_resolution',
+            possible_resolutions_out_name='possible_resolutions'
+        )
 
-        modules = []
+        modules = [calc_aspect]
 
         if args.aspect_ratio_bucketing:
-            modules.append(calc_aspect)
             modules.append(aspect_bucketing)
+        else:
+            modules.append(single_aspect_calculation)
 
         return modules
 
